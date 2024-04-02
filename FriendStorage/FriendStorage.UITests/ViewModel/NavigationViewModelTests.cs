@@ -1,4 +1,6 @@
-﻿using FriendStorage.UI.ViewModel;
+﻿using FriendStorage.Model;
+using FriendStorage.UI.DataProvider;
+using FriendStorage.UI.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +15,42 @@ namespace FriendStorage.UITests.ViewModel
         [Fact]
         public void ShouldLoadFriends()
         {
-            var viewModel = new NavigationViewModel();
+            var viewModel = new NavigationViewModel(
+              new NavigationDataProviderMock());
 
             viewModel.Load();
 
-            //TODO: assert this
-            //Assert.Equal(2, viewModel.Friends.Count);
+            Assert.Equal(2, viewModel.Friends.Count);
+
+            var friend = viewModel.Friends.SingleOrDefault(f => f.Id == 1);
+            Assert.NotNull(friend);
+            Assert.Equal("Julia", friend.DisplayMember);
+
+            friend = viewModel.Friends.SingleOrDefault(f => f.Id == 2);
+            Assert.NotNull(friend);
+            Assert.Equal("Thomas", friend.DisplayMember);
+        }
+
+        [Fact]
+        public void ShouldLoadFriendsOnlyOnce()
+        {
+            var viewModel = new NavigationViewModel(
+              new NavigationDataProviderMock());
+
+            viewModel.Load();
+            viewModel.Load();
+
+            Assert.Equal(2, viewModel.Friends.Count);
+        }
+    }
+
+    public class NavigationDataProviderMock
+    : INavigationDataProvider
+    {
+        public IEnumerable<LookupItem> GetAllFriends()
+        {
+            yield return new LookupItem { Id = 1, DisplayMember = "Julia" };
+            yield return new LookupItem { Id = 2, DisplayMember = "Thomas" };
         }
     }
 }
