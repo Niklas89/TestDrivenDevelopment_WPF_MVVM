@@ -4,26 +4,26 @@ using Xunit;
 
 namespace FriendStorage.UITests.ViewModel
 {
-    public class MainViewModelTests
+  public class MainViewModelTests
+  {
+    [Fact]
+    public void ShouldCallTheLoadMethodOfTheNavigationViewModel()
     {
-        [Fact]
-        public void ShouldCallTheLoadMethodOfTheNavigationViewModel()
-        {
-            var navigationViewModelMock = new NavigationViewModelMock();
-            var viewModel = new MainViewModel(navigationViewModelMock);
+      var navigationViewModelMock = new NavigationViewModelMock();
+      var viewModel = new MainViewModel(navigationViewModelMock);
 
-            viewModel.Load();
+      viewModel.Load();
 
-            Assert.True(navigationViewModelMock.LoadHasBeenCalled);
-        }
+      Assert.True(navigationViewModelMock.LoadHasBeenCalled);
     }
-    public class NavigationViewModelMock :
-      INavigationViewModel
+  }
+  public class NavigationViewModelMock :
+    INavigationViewModel
+  {
+    public bool LoadHasBeenCalled { get; set; }
+    public void Load()
     {
-        public bool LoadHasBeenCalled { get; set; }
-        public void Load()
-        {
-            LoadHasBeenCalled = true;
-        }
+      LoadHasBeenCalled = true;
     }
+  }
 }
