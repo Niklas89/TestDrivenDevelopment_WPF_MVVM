@@ -7,17 +7,33 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using FriendStorage.Model;
+using Moq;
+using Prism.Events;
 
 namespace FriendStorage.UITests.ViewModel
 {
   public class NavigationViewModelTests
   {
+        private NavigationViewModel viewModel;
+
+        public NavigationViewModelTests()
+        {
+            var eventAggregatorMock = new Mock<IEventAggregator>();
+            var navigationDataProviderMock = new Mock<INavigationDataProvider>();
+            navigationDataProviderMock.Setup(dp => dp.GetAllFriends())
+                .Returns(new List<LookupItem>
+                {
+                    new LookupItem { Id = 1, DisplayMember = "Julia" },
+                    new LookupItem { Id = 2, DisplayMember = "Thomas" }
+                });
+            viewModel = new NavigationViewModel(
+              navigationDataProviderMock.Object,
+        eventAggregatorMock.Object);
+        }
+
     [Fact]
     public void ShouldLoadFriends()
     {
-      var viewModel = new NavigationViewModel(
-        new NavigationDataProviderMock());
-
       viewModel.Load();
 
       Assert.Equal(2, viewModel.Friends.Count);
@@ -34,23 +50,10 @@ namespace FriendStorage.UITests.ViewModel
     [Fact]
     public void ShouldLoadFriendsOnlyOnce()
     {
-      var viewModel = new NavigationViewModel(
-        new NavigationDataProviderMock());
-
       viewModel.Load();
       viewModel.Load();
 
       Assert.Equal(2, viewModel.Friends.Count);
-    }
-  }
-
-  public class NavigationDataProviderMock
-    : INavigationDataProvider
-  {
-    public IEnumerable<LookupItem> GetAllFriends()
-    {
-      yield return new LookupItem { Id = 1, DisplayMember = "Julia" };
-      yield return new LookupItem { Id = 2, DisplayMember = "Thomas" };
     }
   }
 }
