@@ -66,6 +66,7 @@
     <Compile Include="DataProvider\IFriendDataProvider.cs" />
     <Compile Include="DataProvider\INavigationDataProvider.cs" />
     <Compile Include="DataProvider\NavigationDataProvider.cs" />
+    <Compile Include="Events\FriendDeletedEvent.cs" />
     <Compile Include="Events\FriendSavedEvent.cs" />
     <Compile Include="Events\OpenFriendEditViewEvent.cs" />
     <Compile Include="Startup\BootStrapper.cs" />
